@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>APEX Interactive Dashboard</title>
+
+https://cdn.jsdelivr.net/npm/chart.jsscript>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #f2f4f8;
+}
+
+header {
+  background: linear-gradient(90deg,#1e3c72,#2a5298);
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+.container {
+  padding: 20px;
+}
+
+.cards {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.card {
+  flex: 1;
+  min-width: 200px;
+  padding: 20px;
+  border-radius: 10px;
+  color: white;
+  transition: transform 0.2s;
+  cursor: pointer;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+.green { background:#4CAF50; }
+.orange { background:#ff9800; }
+.red { background:#f44336; }
+.blue { background:#2196F3; }
+
+.tabs {
+  margin-top:20px;
+  display:flex;
+  gap:10px;
+}
+
+.tab {
+  padding:10px 15px;
+  background:#ddd;
+  border-radius:5px;
+  cursor:pointer;
+}
+
+.tab.active {
+  background:#2a5298;
+  color:white;
+}
+
+.content {
+  display:none;
+  background:white;
+  padding:20px;
+  margin-top:10px;
+  border-radius:10px;
+}
+
+.content.active {
+  display:block;
+}
+
+.accordion {
+  cursor:pointer;
+  padding:10px;
+  margin-top:10px;
+  background:#eee;
+  border-radius:5px;
+}
+
+.panel {
+  display:none;
+  padding:10px;
+  background:#fafafa;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>APEX Clinical Platform</h1>
+<p>Interactive Supply Chain Dashboard</p>
+</header>
+
+<div class="container">
+
+<!-- Cards -->
+<div class="cards">
+  <div class="card green">✅ Zero Stockout</div>
+  <div class="card orange">⚠ <5% Waste</div>
+  <div class="card blue">📊 Smart Forecast</div>
+  <div class="card red">🚨 Alerts Active</div>
+</div>
+
+<!-- Chart -->
+<canvas id="chart" height="100"></canvas>
+
+<!-- Tabs -->
+<div class="tabs">
+  <div class="tab active" onclick="openTab(event,'manager')">Supply Manager</div>
+  <div class="tab" onclick="openTab(event,'site')">Site Coordinator</div>
+  <div class="tab" onclick="openTab(event,'qa')">QA Manager</div>
+</div>
+
+<!-- Tab Content -->
+<div id="manager" class="content active">
+  <h3>Workflow</h3>
+
+  <div class="accordion">Stockout Alert</div>
+  <div class="panel">
+    <p>6 days supply remaining → Auto resupply → Approval → Shipment</p>
+  </div>
+
+  <div class="accordion">Capacity Risk</div>
+  <div class="panel">
+    <p>95% CMO utilization → Shift to backup CMO</p>
+  </div>
+</div>
+
+<div id="site" class="content">
+  <h3>Site Operations</h3>
+
+  <div class="accordion">Patient Visit</div>
+  <div class="panel">
+    <p>Scan patient → FEFO batch → Dispense → Auto inventory update</p>
+  </div>
+
+  <div class="accordion">Low Inventory</div>
+  <div class="panel">
+    <p>Alert triggered → Emergency request → Manager approval</p>
+  </div>
+</div>
+
+<div id="qa" class="content">
+  <h3>QA Monitoring</h3>
+
+  <div class="accordion">Temperature Excursion</div>
+  <div class="panel">
+    <p>10.2°C for 22 min → AI TOR report → Approved</p>
+  </div>
+</div>
+
+</div>
+
+<script>
+// Tabs
+function openTab(evt, tabName) {
+  let contents = document.getElementsByClassName("content");
+  for (let c of contents) c.classList.remove("active");
+
+  let tabs = document.getElementsByClassName("tab");
+  for (let t of tabs) t.classList.remove("active");
+
+  document.getElementById(tabName).classList.add("active");
+  evt.currentTarget.classList.add("active");
+}
+
+// Accordion
+let acc = document.getElementsByClassName("accordion");
+for (let i = 0; i < acc.length; i++) {
+  acc[i].onclick = function () {
+    let panel = this.nextElementSibling;
+    panel.style.display = panel.style.display === "block" ? "none" : "block";
+  }
+}
+
+// Chart
+new Chart(document.getElementById("chart"), {
+  type: 'bar',
+  data: {
+    labels: ["Stockouts","Expiry","Capacity","Excursions"],
+    datasets: [{
+      label: "Risk Level",
+      data: [2,4,9,3],
+      backgroundColor: ["green","orange","red","blue"]
+    }]
+  }
+});
+</script>
+
+</body>
+</html>
